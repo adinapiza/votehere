@@ -29,9 +29,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+        <!--<activity-->
+            <!--android:name=".MainActivity"-->
+            <!--android:label="@string/app_name" >-->
+        <!--</activity>-->
+        <activity android:name=".LoginSignupActivity" >
+        </activity>
+        <activity android:name=".Welcome" >
         </activity>
         <service android:name="com.parse.PushService" />
 

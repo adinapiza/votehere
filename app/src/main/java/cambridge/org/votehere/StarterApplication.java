@@ -20,44 +20,41 @@ import com.parse.ParseUser;
 
 public class StarterApplication extends Application {
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
+    final String applicationID = "nm4ZFm86oIluGijq42043AvddEKKd3WCAQt3RqBh";
+    final String clientKey = "iSb1nDAdEAlsrEbraChX2BpxLG2yvMGE0A5nxA9f";
+    ParseInstallation installation = new ParseInstallation();
 
-    // Enable Local Datastore.
-    Parse.enableLocalDatastore(this);
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    // Add your initialization code here
-    Parse.initialize(this, "nm4ZFm86oIluGijq42043AvddEKKd3WCAQt3RqBh", "iSb1nDAdEAlsrEbraChX2BpxLG2yvMGE0A5nxA9f");
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
 
-    ParseObject.registerSubclass(Candidate.class);
+        // Add your initialization code here
+        Parse.initialize(this, applicationID, clientKey);
+        ParseObject.registerSubclass(Candidate.class);
+        installation = ParseInstallation.getCurrentInstallation();
 
+        if (saveInstallationID()) {
+            ParseUser.enableAutomaticUser();
+            ParseACL defaultACL = new ParseACL();
 
-    // ParseAnalytics.trackAppOpenedInBackground(getIntent());
+            // Optionally enable public read access.
+            // defaultACL.setPublicReadAccess(true);
 
-    // Parse.initialize(this);
-
-   //List<Candidate> candidates =
-
-
-
-//    String android_id = Secure.getString(this.getContentResolver(),
-//            Secure.ANDROID_ID);
-
-    ParseInstallation installation =  ParseInstallation.getCurrentInstallation();
-    try {
-
-      installation.save();
-      System.out.println(installation.getInstallationId() + " Installation ID PARSE");
-    } catch (ParseException e) {
-      e.printStackTrace();
+            ParseACL.setDefaultACL(defaultACL, true);
+        }
     }
 
-
-    ParseUser.enableAutomaticUser();
-    ParseACL defaultACL = new ParseACL();
-    // Optionally enable public read access.
-    // defaultACL.setPublicReadAccess(true);
-    ParseACL.setDefaultACL(defaultACL, true);
-  }
+    private boolean saveInstallationID() {
+        try {
+            installation.save();
+            System.out.println(installation.getInstallationId() + " Installation ID PARSE");
+            return true;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
