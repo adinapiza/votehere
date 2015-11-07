@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <title>Highcharts Example</title>
+
+            <script type="text/javascript">
+                var containerHeight;
+                function assignHeightToContainer(height) {
+
+                    containerHeight = height-100;
+                }
+            
+                function buildChart() {
+
+                         $( "#container" ).css( "border", "3px solid red" );
+                        buildPerformanceChart();
+                    
+                }
+            
+                function buildPerformanceChart(data) {
+                    Highcharts.Axis.prototype.init = (function(func) {
+                        return function(chart, userOptions) {
+                            if (userOptions.categories) {
+                                var labels = userOptions.labels || {};
+                                var originalFormatter = userOptions.labels.formatter;
+                                                      
+                                this.userCategories = userOptions.categories;
+                                userOptions.categories = null;
+                                                      
+                                labels.formatter = function() {
+                                                      this.axis.options.labels.align = (this.value == this.axis.min) ? "left" : ((this.value == this.axis.max) ? "right" : "center");
+                                                      
+                                if (!originalFormatter)
+                                    return this.axis.userCategories[this.value];
+                                                      
+                                this.value = this.axis.userCategories[this.value];
+                                return originalFormatter.call(this);
+                            }
+                                                      
+                            userOptions.labels = labels;
+                        }
+                        func.apply(this, [chart, userOptions]);
+                    };
+                }(Highcharts.Axis.prototype.init));
+                                                      
+                var chart = new Highcharts.Chart({
+                                chart: {
+                                    renderTo: 'container',
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: '',
+                                    x: -20 //center
+                                },
+                                subtitle: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                xAxis: {
+                                    categories: ['Binay', 'Duterte', 'Mar', 'Miriam', 'Poe'],
+                                    labels: {
+                                        formatter: function() {
+                                            return "" + this.value + "";
+                                        }
+                                    },
+                                    startOnTick: false,
+                                    endOnTick: false,
+                                    minPadding: 0,
+                                    maxPadding: 0,
+                                    gridLineWidth: 1
+                                },
+                                yAxis: {
+                                    max: 100
+                                },
+                                series: [{
+                                         name: 'Vote',
+                                         data: data
+                                         }]
+                            });
+
+                }
+
+                
+            </script>
+    </head>
+    
+    <body>
+
+
+        <div id="container">This is a test</div>
+        
+        <script src="jquery-2.0.0.min.js"></script>
+        <script src="highcharts.js"></script>
+    </body>
+</html>
